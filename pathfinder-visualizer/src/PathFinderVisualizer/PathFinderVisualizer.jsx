@@ -3,6 +3,8 @@ import "./PathFinderVisualizer.css"
 import Node from "./Node/Node.jsx"
 import { dijkstra } from "../algorithms/Dijkstra's.js";
 import { getNodesInShortestPathOrder } from "../algorithms/Dijkstra's.js";
+import { dfs } from "../algorithms/DFS.js";
+import { bfs } from "../algorithms/BFS.js";
 
 const START_NODE_ROW = 10;
 const START_NODE_COL = 15;
@@ -56,6 +58,24 @@ class PathFinderVisualizer extends React.Component {
         this.animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder);
     }
 
+    visualizeDFS(){
+        const { grid } = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+        const visitedNodesInOrder = dfs(grid, startNode, finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        this.animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+
+    visualizeBFS(){
+        const { grid } = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+        const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        this.animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+
     animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
             if (i === visitedNodesInOrder.length) {
@@ -81,15 +101,38 @@ class PathFinderVisualizer extends React.Component {
             }, 50 * i);
         }
     }
-
+    clearBoard() {
+        const { grid } = this.state;
+        const newGrid = grid.map(row =>
+            row.map(node => ({
+                ...node,
+                isVisited: false,
+                isWall: false,
+                distance: Infinity,
+                previous: null
+            }))
+        );
+        this.setState({ grid: newGrid }, () => {
+            this.clearBoardVisuals();
+        });
+    }
+    
+    clearBoardVisuals() {
+        const allNodes = document.querySelectorAll('.node');
+        allNodes.forEach(node => {
+            node.classList.remove('node-visited');
+            node.classList.remove('node-wall');
+            node.classList.remove('node-shortest-path');
+        });
+        
+    }
+    
+    
 
     render() {
         const { grid } = this.state;
         return (
             <>
-                <button onClick={() => this.visualizeDijkstra()}>
-                    Visualize Dijkstra's Algorithm
-                </button>
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
                         return (
@@ -110,6 +153,18 @@ class PathFinderVisualizer extends React.Component {
                         )
                     })}
                 </div>
+                <button onClick={() => this.visualizeDijkstra()}>
+                    Visualize Dijkstra's Algorithm
+                </button>
+                <button onClick={() => this.visualizeDFS()}>
+                    Visualize DFS
+                </button>
+                <button onClick={() => this.visualizeBFS()}>
+                    Visualize BFS
+                </button>
+                <button onClick={() => this.clearBoard()}>
+                    Clear Board
+                </button>
             </>
         );
     }
