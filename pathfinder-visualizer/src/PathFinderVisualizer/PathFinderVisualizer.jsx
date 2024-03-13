@@ -1,7 +1,8 @@
 import React from "react";
 import "./PathFinderVisualizer.css"
 import Node from "./Node/Node.jsx"
-
+import { dijkstra } from "../algorithms/Dijkstra's.js";
+import { getNodesInShortestPathOrder } from "../algorithms/Dijkstra's.js";
 
 const START_NODE_ROW = 10;
 const START_NODE_COL = 15;
@@ -13,7 +14,7 @@ const intializeGrid = () => {
     for (let row = 0; row < 20; row++) {
         let currRow = [];
         for (let col = 0; col < 50; col++) {
-            const currNode =  {
+            const currNode = {
                 col,
                 row,
                 isStart: row === START_NODE_ROW && col === START_NODE_COL,
@@ -21,7 +22,7 @@ const intializeGrid = () => {
                 distance: Infinity,
                 isVisited: false,
                 isWall: false,
-                previousNode: null,
+                previous: null,
             };
             currRow.push(currNode);
         }
@@ -29,6 +30,8 @@ const intializeGrid = () => {
     }
     return grid;
 }
+
+
 
 class PathFinderVisualizer extends React.Component {
     constructor() {
@@ -44,30 +47,50 @@ class PathFinderVisualizer extends React.Component {
         this.setState({ grid });
     }
 
+    visualizeDijkstra() {
+        const { grid } = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
+        const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        for (const node of visitedNodesInOrder) {
+            document.getElementById(`node-${node.row}-${node.col}`).className =
+                'node node-visited';
+        }
+        for (const node of nodesInShortestPathOrder) {
+            document.getElementById(`node-${node.row}-${node.col}`).className =
+                'node node-shortest-path';
+        }
+        
+    }
+
 
     render() {
         const { grid } = this.state;
-        console.log(grid);
-
         return (
             <>
-                <button>
+                <button onClick={() => this.visualizeDijkstra()}>
                     Visualize Dijkstra's Algorith
                 </button>
                 <div className="grid">
-                    {
-                        grid.map((row, rowIdx) => {
-                            return <div>
-                                {
-                                    row.map((node, nodeIdx) =>
-                                        <Node key={nodeIdx}
-                                            isStart={node.isStart}
-                                            isFinish={node.isFinish}
-                                        ></Node>)
-                                }
+                    {grid.map((row, rowIdx) => {
+                        return (
+                            <div key={rowIdx}>
+                                {row.map((node, nodeIdx) => {
+                                    const { row, col, isFinish, isStart, isWall } = node;
+                                    return (
+                                        <Node
+                                            key={nodeIdx}
+                                            col={col}
+                                            isFinish={isFinish}
+                                            isStart={isStart}
+                                            isWall={isWall}
+                                            row={row}></Node>
+                                    );
+                                })}
                             </div>
-                        })
-                    }
+                        )
+                    })}
                 </div>
             </>
         );

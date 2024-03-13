@@ -1,3 +1,19 @@
-.grid{
-    margin: 100px 0 0; 
+.grid {
+    margin: 100px 0 0;
+}
+
+.node-shortest-path {
+    background-color: rgb(218, 129, 13);
+}
+
+.node-visited {
+    background-color: blue;
+}
+
+.node-finish {
+    background-color: red;
+}
+
+.node-start {
+    background-color: green;
 }

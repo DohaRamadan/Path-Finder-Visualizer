@@ -1,4 +1,4 @@
-.node{
+.node {
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -7,8 +7,8 @@
 
 .node-finish {
     background-color: red;
-  }
-  
-  .node-start {
+}
+
+.node-start {
     background-color: green;
-  }
+}
