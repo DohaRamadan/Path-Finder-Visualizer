@@ -2,5 +2,13 @@
     width: 20px;
     height: 20px;
     display: inline-block;
-    outline: 1px solid #909cbf; 
+    outline: 1px solid rgb(175, 216, 248);
 }
+
+.node-finish {
+    background-color: red;
+  }
+  
+  .node-start {
+    background-color: green;
+  }

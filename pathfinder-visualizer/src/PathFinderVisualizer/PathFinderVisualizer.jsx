@@ -3,21 +3,25 @@ import "./PathFinderVisualizer.css"
 import Node from "./Node/Node.jsx"
 
 
-const START_ROW = 5;
-const START_COL = 10;
-const END_ROW = 5;
-const END_COL = 45;
+const START_NODE_ROW = 10;
+const START_NODE_COL = 15;
+const FINISH_NODE_ROW = 10;
+const FINISH_NODE_COL = 35;
 
 const intializeGrid = () => {
     const grid = [];
-    for (let row = 0; row < 15; row++) {
+    for (let row = 0; row < 20; row++) {
         let currRow = [];
         for (let col = 0; col < 50; col++) {
-            const currNode = {
-                row: row,
-                col: col,
-                isStart: row === START_ROW && col === START_COL,
-                isFinish: row === END_ROW && col === END_COL,
+            const currNode =  {
+                col,
+                row,
+                isStart: row === START_NODE_ROW && col === START_NODE_COL,
+                isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
+                distance: Infinity,
+                isVisited: false,
+                isWall: false,
+                previousNode: null,
             };
             currRow.push(currNode);
         }
