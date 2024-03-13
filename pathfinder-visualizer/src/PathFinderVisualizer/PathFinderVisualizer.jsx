@@ -68,7 +68,7 @@ class PathFinderVisualizer extends React.Component {
                 const node = visitedNodesInOrder[i];
                 document.getElementById(`node-${node.row}-${node.col}`).className =
                     'node node-visited';
-            }, 10 * i); 
+            }, 10 * i);
         }
     }
 
@@ -88,7 +88,7 @@ class PathFinderVisualizer extends React.Component {
         return (
             <>
                 <button onClick={() => this.visualizeDijkstra()}>
-                    Visualize Dijkstra's Algorith
+                    Visualize Dijkstra's Algorithm
                 </button>
                 <div className="grid">
                     {grid.map((row, rowIdx) => {
