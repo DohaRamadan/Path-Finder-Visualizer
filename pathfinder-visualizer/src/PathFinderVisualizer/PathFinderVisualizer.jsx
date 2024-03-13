@@ -53,15 +53,33 @@ class PathFinderVisualizer extends React.Component {
         const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
         const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
         const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-        for (const node of visitedNodesInOrder) {
-            document.getElementById(`node-${node.row}-${node.col}`).className =
-                'node node-visited';
+        this.animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+
+    animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder) {
+        for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+            if (i === visitedNodesInOrder.length) {
+                setTimeout(() => {
+                    this.animateShortestPath(nodesInShortestPathOrder);
+                }, 10 * i);
+                return;
+            }
+            setTimeout(() => {
+                const node = visitedNodesInOrder[i];
+                document.getElementById(`node-${node.row}-${node.col}`).className =
+                    'node node-visited';
+            }, 10 * i); 
         }
-        for (const node of nodesInShortestPathOrder) {
-            document.getElementById(`node-${node.row}-${node.col}`).className =
-                'node node-shortest-path';
+    }
+
+    animateShortestPath(nodesInShortestPathOrder) {
+        for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+            setTimeout(() => {
+                const node = nodesInShortestPathOrder[i];
+                document.getElementById(`node-${node.row}-${node.col}`).className =
+                    'node node-shortest-path';
+            }, 50 * i);
         }
-        
     }
 
 
