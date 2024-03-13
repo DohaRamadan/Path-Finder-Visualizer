@@ -19,7 +19,7 @@ const intializeGrid = () => {
                 isStart: row === START_ROW && col === START_COL,
                 isFinish: row === END_ROW && col === END_COL,
             };
-            currRow.push([]);
+            currRow.push(currNode);
         }
         grid.push(currRow);
     }
@@ -55,7 +55,11 @@ class PathFinderVisualizer extends React.Component {
                         grid.map((row, rowIdx) => {
                             return <div>
                                 {
-                                    row.map((node, nodeIdx) => <Node></Node>)
+                                    row.map((node, nodeIdx) =>
+                                        <Node key={nodeIdx}
+                                            isStart={node.isStart}
+                                            isFinish={node.isFinish}
+                                        ></Node>)
                                 }
                             </div>
                         })

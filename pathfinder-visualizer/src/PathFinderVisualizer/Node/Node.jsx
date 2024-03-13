@@ -4,7 +4,7 @@ import "./Node.css"
 class Node extends React.Component {
     state = {  } 
     constructor(props){
-        super() ;
+        super(props) ;
         this.state = {}; 
     }
     render() { 
