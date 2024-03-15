@@ -1,7 +1,7 @@
 .node {
     width: 25px;
     height: 25px;
-    outline: 1px solid rgb(175, 216, 248);
+    outline: 0.5px solid rgba(74, 68, 61, 0.64);;
     display: inline-block;
 }
 
