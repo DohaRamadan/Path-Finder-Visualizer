@@ -17,7 +17,7 @@
 button{
    background-color: rgb(147 89 89);
    margin: 30px; 
-   width: 150px; 
+   width: 130px; 
    height: 50px;
    text-align: center;
    display: inline-block;
@@ -39,7 +39,7 @@ button:hover{
 .grid{
     display: grid;
 	place-items: center;
-    margin: 100px 0 0;
+    margin: 70px 0 0;
 }
 
 body{
