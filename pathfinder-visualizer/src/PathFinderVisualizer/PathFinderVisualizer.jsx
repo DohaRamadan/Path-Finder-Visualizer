@@ -17,7 +17,7 @@ const intializeGrid = () => {
         distance: Infinity,
         isVisited: false,
         isWall: false,
-        previous: null
+        previous: null,
       };
       currRow.push(currNode);
     }
@@ -37,7 +37,8 @@ class PathFinderVisualizer extends React.Component {
       isSettingStartNode: false,
       isSettingEndNode: false,
       isAddingWall: false,
-      boardNotEmpty: false
+      boardNotEmpty: false,
+      errorMessage: "",
     };
   }
 
@@ -47,7 +48,7 @@ class PathFinderVisualizer extends React.Component {
   }
 
   handleSetStartNode() {
-    if(this.state.boardNotEmpty){
+    if (this.state.boardNotEmpty) {
       alert("Please clear the board first");
       return;
     }
@@ -55,7 +56,7 @@ class PathFinderVisualizer extends React.Component {
   }
 
   handleSetEndNode() {
-    if(this.state.boardNotEmpty){
+    if (this.state.boardNotEmpty) {
       alert("Please clear the board first");
       return;
     }
@@ -63,7 +64,7 @@ class PathFinderVisualizer extends React.Component {
   }
 
   handleAddWall() {
-    if(this.state.boardNotEmpty){
+    if (this.state.boardNotEmpty) {
       alert("Please clear the board first");
       return;
     }
@@ -119,7 +120,7 @@ class PathFinderVisualizer extends React.Component {
   }
 
   visualizeDijkstra() {
-    if(this.state.boardNotEmpty){
+    if (this.state.boardNotEmpty) {
       alert("Please clear the board first");
       return;
     }
@@ -129,13 +130,21 @@ class PathFinderVisualizer extends React.Component {
       return;
     }
     const visitedNodesInOrder = dijkstra(grid, startNode, endNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    let nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    if (nodesInShortestPathOrder === null) {
+      if (startNode === endNode) {
+        nodesInShortestPathOrder = [];
+        nodesInShortestPathOrder.unshift(endNode);
+      } else {
+        this.setState({ errorMessage: "No path were found" });
+      }
+    }
     this.animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder);
-    this.setState({ startNode: {}, endNode: {} , boardNotEmpty: true});
+    this.setState({ startNode: {}, endNode: {}, boardNotEmpty: true });
   }
 
   visualizeDFS() {
-    if(this.state.boardNotEmpty){
+    if (this.state.boardNotEmpty) {
       alert("Please clear the board first");
       return;
     }
@@ -145,13 +154,21 @@ class PathFinderVisualizer extends React.Component {
       return;
     }
     const visitedNodesInOrder = dfs(grid, startNode, endNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    let nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    if (nodesInShortestPathOrder === null) {
+      if (startNode === endNode) {
+        nodesInShortestPathOrder = [];
+        nodesInShortestPathOrder.unshift(endNode);
+      } else {
+        this.setState({ errorMessage: "No path were found" });
+      }
+    }
     this.animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder);
-    this.setState({ startNode: {}, endNode: {} , boardNotEmpty: true});
+    this.setState({ startNode: {}, endNode: {}, boardNotEmpty: true });
   }
 
   visualizeBFS() {
-    if(this.state.boardNotEmpty){
+    if (this.state.boardNotEmpty) {
       alert("Please clear the board first");
       return;
     }
@@ -161,9 +178,17 @@ class PathFinderVisualizer extends React.Component {
       return;
     }
     const visitedNodesInOrder = bfs(grid, startNode, endNode);
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    let nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    if (nodesInShortestPathOrder === null) {
+      if (startNode === endNode) {
+        nodesInShortestPathOrder = [];
+        nodesInShortestPathOrder.unshift(endNode);
+      } else {
+        this.setState({ errorMessage: "No path were found" });
+      }
+    }
     this.animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder);
-    this.setState({ startNode: {}, endNode: {} , boardNotEmpty: true});
+    this.setState({ startNode: {}, endNode: {}, boardNotEmpty: true });
   }
 
   animateVisistedNodes(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -183,6 +208,7 @@ class PathFinderVisualizer extends React.Component {
   }
 
   animateShortestPath(nodesInShortestPathOrder) {
+    if (nodesInShortestPathOrder === null) return;
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
@@ -205,7 +231,12 @@ class PathFinderVisualizer extends React.Component {
         isFinish: false,
       }))
     );
-    this.setState({ startNode: {}, endNode: {} , boardNotEmpty: false});
+    this.setState({
+      startNode: {},
+      endNode: {},
+      boardNotEmpty: false,
+      errorMessage: "",
+    });
     this.setState({ grid: newGrid }, () => {
       this.clearBoardVisuals();
     });
@@ -264,6 +295,9 @@ class PathFinderVisualizer extends React.Component {
           <button onClick={() => this.visualizeBFS()}>Visualize BFS</button>
           <button onClick={() => this.clearBoard()}>Clear Board</button>
         </div>
+        {this.state.errorMessage && (
+          <p className="error"> {this.state.errorMessage} </p>
+        )}
       </>
     );
   }
